@@ -34,10 +34,12 @@ public class WuzzufJobsAnalysis {
         wuzzufData = createTempView(wuzzufData);
         wuzzufData = encodeCategories(wuzzufData);
         wuzzufData = factoriesYearsOfExp(wuzzufData);
-        System.out.println("+++++========++++++++Done");
         wuzzufData.printSchema();
         System.out.println("+++++========++++++++Done");
+        System.out.println("+++++========++++++++Done");
         wuzzufData.show();
+        System.out.println("+++++========++++++++Done");
+        wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
         System.out.println("+++++========++++++++Done");
     }
 
