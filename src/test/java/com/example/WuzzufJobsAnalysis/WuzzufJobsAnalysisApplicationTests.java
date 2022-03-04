@@ -1,13 +1,13 @@
-package com.example.WuzzufJobsAnalysis;
+// package com.example.WuzzufJobsAnalysis;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class WuzzufJobsAnalysisApplicationTests {
+// @SpringBootTest
+// class WuzzufJobsAnalysisApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// 	@Test
+// 	void contextLoads() {
+// 	}
 
-}
+// }

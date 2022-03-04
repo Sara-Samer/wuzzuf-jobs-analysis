@@ -18,7 +18,19 @@ public class WuzzufJobsCsv implements DataLoaderDAO {
         Dataset<Row> dataset = spark.read()
                 .option("header", "true")
                 .csv(filename);
-        // dataset.printSchema();
-        return dataset;
+        dataset.show(5);
+        System.out.println("+++++========++++++++Done");
+        // dataset.createOrReplaceTempView("WUZZUF_DATA");
+        // Dataset<Row> typedDataset = spark.sql("SELECT "
+        //         + "cast (Title as string) Title, "
+        //         + "cast (Company as string) Company, "
+        //         + "cast (Location as string) Location, "
+        //         + "cast (Type as string) Type, "
+        //         + "cast (Level as string) Level, "
+        //         + "cast (YearsExp as string) YearsExp, "
+        //         + "cast (Country as string) Country, "
+        //         + "cast (Skills as string) Skills FROM WUZZUF_DATA");
+        // return typedDataset;
+        return null;
     }
 }
