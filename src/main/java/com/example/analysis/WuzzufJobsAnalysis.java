@@ -3,6 +3,7 @@ package com.example.analysis;
 import org.apache.spark.sql.*;
 import org.apache.spark.ml.feature.StringIndexer;
 
+import static java.util.stream.Collectors.*;
 import static org.apache.spark.sql.functions.col;
 import static org.apache.spark.sql.functions.callUDF;
 
@@ -13,9 +14,10 @@ import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.style.Styler;
+import org.apache.spark.sql.Row;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 import static com.example.utils.Constants.COLUMN_PARSE_YEARS_OF_EXP_UDF_NAME;
 import static com.example.utils.Constants.COLUMN_PARSE_MAX_UDF_NAME;
@@ -57,6 +59,15 @@ public class WuzzufJobsAnalysis {
         MostAreas.show();
         AreasCountBarGraph(wuzzufData);
         System.out.println("+++++========++++++++Done");
+        mostPopularSkills(wuzzufData);
+
+        Map skills_map = mostPopularSkills(wuzzufData);
+
+
+        //Dataset<Row> ww= mostPopularSkills(wuzzufData);
+        //ww.show();
+        //JobSkillsBarGraph (wuzzufData);
+
     }
 
     public Dataset<Row> createTempView(Dataset<Row> df) {
@@ -138,12 +149,58 @@ public class WuzzufJobsAnalysis {
 
     }
 
+    public void JobSkillsBarGraph(Dataset<Row> df)
+    {
+
+        Dataset<Row> MostTitles_df = (Dataset<Row>) mostPopularSkills( df);
+        DrawBarChart(MostTitles_df,"Title","count","Most Popular Title","Titles","Count","Titles's Count");
+
+    }
+
     public void AreasCountBarGraph(Dataset<Row> df)
     {
         Dataset<Row> MostAreas_df= MostPopularAreas( df);
         DrawBarChart(MostAreas_df,"Location","count","Most Popular Areas","Areas","Count","Area's Count");
 
     }
+
+    public Map<String, Integer> mostPopularSkills(Dataset<Row> df) {
+
+        List<Row> skillSet = df.collectAsList();
+        List<String> allSkils = new ArrayList<String>();
+        String skill;
+        for (Row row : skillSet) {
+            skill = row.get(4).toString();
+            String[] subs = skill.split(",");
+            for (String word : subs) {
+                allSkils.add(word);
+            }
+        }
+        Map<String, Integer> mapAllSkills =
+                allSkils.stream().collect(groupingBy(Function.identity(), summingInt(e -> 1)));
+        //Sort the map descending
+        Map<String, Integer> sorted_skillset = mapAllSkills
+                .entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .limit(100)
+                .collect(
+                        toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                LinkedHashMap::new));
+        int idx=0;
+
+        System.out.println("=============== Most Repaeated Skills ==============");
+        for (Map.Entry<String, Integer> entry : sorted_skillset.entrySet()) {
+            System.out.println(entry.getKey()+" : "+entry.getValue());
+            if (idx==30)
+            {
+                break;
+            }
+            idx++;
+        }
+        return (sorted_skillset);
+    }
+
 
 
 }
