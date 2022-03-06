@@ -65,6 +65,11 @@
             <groupId>org.codehaus.janino</groupId>
             <version>3.0.8</version>
         </dependency>
+        <dependency>
+            <groupId>org.knowm.xchart</groupId>
+            <artifactId>xchart</artifactId>
+            <version>3.8.0</version>
+        </dependency>
 
     </dependencies>
 

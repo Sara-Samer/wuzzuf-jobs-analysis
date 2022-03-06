@@ -1,18 +1,18 @@
 package com.example.analysis;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.ml.feature.StringIndexer;
-import org.apache.spark.sql.SparkSession;
-import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.callUDF;
-
 import com.example.dataloader.WuzzufJobsCsv;
 import com.example.dataloader.dao.DataLoaderDAO;
 import com.example.utils.UDFUtils;
-import static com.example.utils.Constants.COLUMN_PARSE_YEARS_OF_EXP_UDF_NAME;
-import static com.example.utils.Constants.COLUMN_PARSE_MAX_UDF_NAME;
-import static com.example.utils.Constants.COLUMN_PARSE_MIN_UDF_NAME;
+import org.apache.spark.ml.feature.StringIndexer;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
+
+import java.util.List;
+
+import static com.example.utils.Constants.*;
+import static org.apache.spark.sql.functions.callUDF;
+import static org.apache.spark.sql.functions.col;
 
 public class WuzzufJobsAnalysis {
     Dataset<Row> wuzzufData;
@@ -41,7 +41,37 @@ public class WuzzufJobsAnalysis {
         System.out.println("+++++========++++++++Done");
         wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
         System.out.println("+++++========++++++++Done");
+        // clean Data.
+        //cleanData();
+        this.jobsByCompany();
+
+        // Count the jobs for each company and display that in order
+
     }
+    //clean data
+    private void cleanData() {
+        // Remove Duplicates:
+        wuzzufData = wuzzufData.dropDuplicates();
+        // Remove Nulls from YearsOfExp column
+        String sql = "Select * FROM WuzzufJobs WHERE YearsExp != \"null Yrs of Exp\"";
+        wuzzufData.createOrReplaceTempView ("WuzzufJobs");
+        wuzzufData = spark.sql(sql);
+    }
+    // return some of first rows from data ---- it need number of line that you want to display.
+    public Dataset<Row> getHeadData(int number){
+        // Create view and execute query to display first n rows of WuzzufJobs data:
+        this.wuzzufData.createOrReplaceTempView ("WuzzufJobs");
+        return this.spark.sql("SELECT * FROM WuzzufJobs LIMIT "+ number+";");
+    }
+    public String jobsByCompany(){
+        Dataset<Row> company = wuzzufData.groupBy("Company").count().orderBy(col("count").desc()).limit(20);
+        company.printSchema();
+        //System.exit(1);
+        PieCharts.popularCompanies(company);
+        List<Row> top_Companies = company.collectAsList();
+        return null;
+    }
+
 
     public Dataset<Row> createTempView(Dataset<Row> df) {
         df.createOrReplaceTempView("WUZZUF_DATA");
