@@ -66,7 +66,7 @@ public class WuzzufJobsAnalysis {
         wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
         System.out.println("+++++========++++++++Done");
         // clean Data.
-        //cleanData();
+        cleanData();
         this.jobsByCompany();
 
         // Count the jobs for each company and display that in order

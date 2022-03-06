@@ -38,7 +38,7 @@ public class PieCharts implements ExampleChart<PieChart>{
         //Display the chart:
         new SwingWrapper<PieChart>(chart).displayChart();
         try {
-            BitmapEncoder.saveBitmap(chart,"C:\\Users\\BTC\\IdeaProjects\\final_project\\wuzzuf-jobs-analysis-main\\src\\main\\resources", BitmapEncoder.BitmapFormat.PNG);
+            BitmapEncoder.saveBitmap(chart,"C:\\Users\\BTC\\IdeaProjects\\final_project\\wuzzuf-jobs-analysis-main\\src\\main\\resources\\companyjobspiechart", BitmapEncoder.BitmapFormat.PNG);
         }
         catch (Exception e){
             System.out.println(e);
