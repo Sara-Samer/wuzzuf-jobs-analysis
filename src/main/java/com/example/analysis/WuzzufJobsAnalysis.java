@@ -82,9 +82,9 @@ public class WuzzufJobsAnalysis {
         System.out.println("+++++========++++++++Done");
         mostPopularSkills(wuzzufData);
 
-        Map skills_map = mostPopularSkills(wuzzufData);
+        //Map skills_map = mostPopularSkills(wuzzufData);
 
-
+        // this is a change in intellij
         //Dataset<Row> ww= mostPopularSkills(wuzzufData);
         //ww.show();
         //JobSkillsBarGraph (wuzzufData);
