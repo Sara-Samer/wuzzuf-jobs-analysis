@@ -80,8 +80,8 @@ public class WuzzufJobsAnalysis {
         MostAreas.show();
         AreasCountBarGraph(wuzzufData);
         System.out.println("+++++========++++++++Done");
-        mostPopularSkills(wuzzufData);
 
+        mostPopularSkills(wuzzufData);
         //Map skills_map = mostPopularSkills(wuzzufData);
 
         // this is a change in intellij
