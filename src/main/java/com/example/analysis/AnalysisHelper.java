@@ -6,6 +6,8 @@ import org.apache.spark.sql.Row;
 import static com.example.utils.Constants.POPULAR_TITLES_CHART;
 
 import java.io.File;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import static com.example.utils.Constants.POPULAR_SKILLS_CHART;
 import static com.example.utils.Constants.POPULAR_AREAS_CHART;
@@ -14,7 +16,7 @@ import static com.example.utils.Constants.IMG_PATH;;
 public class AnalysisHelper {
     Dataset<Row> wuzzufData;
     String fileExtention = ".jpg";
-    
+
     private static AnalysisHelper instance;
 
     private AnalysisHelper() {
@@ -62,6 +64,8 @@ public class AnalysisHelper {
         }
         html += "</tr>";
         html += "</thead>";
+
+        html += "<tbody>";
         for (Row row : df.collectAsList()) {
             html += "<tr>";
             for (int i = 0; i < row.length(); i++) {
@@ -71,7 +75,6 @@ public class AnalysisHelper {
         }
         html += "</tbody>";
 
-        html += "</tbody>";
         html += "</table>";
         return html;
     }
@@ -92,7 +95,7 @@ public class AnalysisHelper {
             WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_TITLES_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">",  "/" + POPULAR_TITLES_CHART + this.fileExtention);
+                String.format("<img src=\"%s\">", "/" + POPULAR_TITLES_CHART + this.fileExtention);
         return html;
     }
 
@@ -100,10 +103,10 @@ public class AnalysisHelper {
         String path = IMG_PATH + POPULAR_SKILLS_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
-            WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
+            WuzzufJobsAnalysis.getInstance().JobSkillsBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_SKILLS_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">",  "/" + POPULAR_SKILLS_CHART + this.fileExtention);
+                String.format("<img src=\"%s\">", "/" + POPULAR_SKILLS_CHART + this.fileExtention);
         return html;
     }
 
@@ -111,26 +114,48 @@ public class AnalysisHelper {
         String path = IMG_PATH + POPULAR_AREAS_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
-            WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
+            WuzzufJobsAnalysis.getInstance().AreasCountBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_AREAS_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">",  "/" + POPULAR_AREAS_CHART + this.fileExtention);
+                String.format("<img src=\"%s\">", "/" + POPULAR_AREAS_CHART + this.fileExtention);
         return html;
     }
 
-    public String getJobsChart() {
-        return "";
-    }
-
     public String getTitlesTable() {
-        return "";
+        Dataset<Row> table = WuzzufJobsAnalysis.getInstance().MostPopularTitles(wuzzufData);
+        return this.datasetToTable(table);
     }
 
-    public String geSkillsTable() {
-        return "";
+    public String getSkillsTable() {
+        Map<String, Integer> table = WuzzufJobsAnalysis.getInstance().mostPopularSkills(wuzzufData);
+        String html = "<table style=\"width:100%;text-align: center\">";
+        html += "<thead>";
+        html += "<tr>";
+        html += ("<th>" + "Skill" + "</th>");
+        html += ("<th>" + "Count" + "</th>");
+        html += "</tr>";
+        html += "</thead>";
+
+        html += "<tbody>";
+        for (Entry<String, Integer> entry : table.entrySet()) {
+            html += "<tr>";
+            html += ("<td>" + entry.getKey() + "</td>");
+            html += ("<td>" + entry.getValue() + "</td>");
+            html += "</tr>";
+        }
+        html += "</tbody>";
+
+        html += "</table>";
+
+        return html;
     }
 
     public String getAreasTable() {
+        Dataset<Row> table = WuzzufJobsAnalysis.getInstance().MostPopularAreas(wuzzufData);
+        return this.datasetToTable(table);
+    }
+
+    public String getJobsChart() {
         return "";
     }
 

@@ -244,11 +244,11 @@ public class WuzzufJobsAnalysis {
 
     public Map<String, Integer> mostPopularSkills(Dataset<Row> df) {
 
-        List<Row> skillSet = df.collectAsList();
+        List<Row> skillSet = df.select("Skills").collectAsList();
         List<String> allSkils = new ArrayList<String>();
         String skill;
         for (Row row : skillSet) {
-            skill = row.get(4).toString();
+            skill = row.get(0).toString();
             String[] subs = skill.split(",");
             for (String word : subs) {
                 allSkils.add(word);
@@ -265,16 +265,15 @@ public class WuzzufJobsAnalysis {
                 .collect(
                         toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
                                 LinkedHashMap::new));
-        int idx = 0;
-
-        System.out.println("=============== Most Repaeated Skills ==============");
-        for (Map.Entry<String, Integer> entry : sorted_skillset.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-            if (idx == 30) {
-                break;
-            }
-            idx++;
-        }
+        // int idx = 0;
+        // System.out.println("=============== Most Repaeated Skills ==============");
+        // for (Map.Entry<String, Integer> entry : sorted_skillset.entrySet()) {
+        //     System.out.println(entry.getKey() + " : " + entry.getValue());
+        //     if (idx == 30) {
+        //         break;
+        //     }
+        //     idx++;
+        // }
         return (sorted_skillset);
     }
 
