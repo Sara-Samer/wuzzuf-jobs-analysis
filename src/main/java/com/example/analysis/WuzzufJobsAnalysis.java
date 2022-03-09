@@ -53,6 +53,8 @@ public class WuzzufJobsAnalysis {
     }
 
     public void readData() {
+        spark.sparkContext().setLogLevel("ERROR");
+
         DataLoaderDAO loader = new WuzzufJobsCsv();
         wuzzufData = loader.load("src/main/resources/Wuzzuf_Jobs.csv");
         wuzzufData = createTempView(wuzzufData);
@@ -66,8 +68,8 @@ public class WuzzufJobsAnalysis {
         wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
         System.out.println("+++++========++++++++Done");
         // clean Data.
-        cleanData();
-        this.jobsByCompany();
+        // cleanData();
+        // this.jobsByCompany();
 
         // Count the jobs for each company and display that in order
 
