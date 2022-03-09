@@ -3,12 +3,21 @@ package com.example.analysis;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 
+import static com.example.utils.Constants.POPULAR_TITLES_CHART;
+
+import java.io.File;
+
+import static com.example.utils.Constants.POPULAR_SKILLS_CHART;
+import static com.example.utils.Constants.POPULAR_AREAS_CHART;
+import static com.example.utils.Constants.IMG_PATH;;
+
 public class AnalysisHelper {
     Dataset<Row> wuzzufData;
     private static AnalysisHelper instance;
 
     private AnalysisHelper() {
-
+        wuzzufData = WuzzufJobsAnalysis.getInstance().readData();
+        wuzzufData = WuzzufJobsAnalysis.getInstance().factoriesYearsOfExp(wuzzufData);
     }
 
     public static AnalysisHelper getInstance() {
@@ -18,18 +27,17 @@ public class AnalysisHelper {
         return instance;
     }
 
-    public String readData(){
-        WuzzufJobsAnalysis inst = WuzzufJobsAnalysis.getInstance();
-        wuzzufData = inst.readData();
-        wuzzufData = inst.factoriesYearsOfExp(wuzzufData);
+    public String readData() {
         String html = this.datasetToTable(wuzzufData.limit(100));
         return html;
     }
-    public String cleanData(){
+
+    public String cleanData() {
         // wuzzufData = WuzzufJobsAnalysis.getInstance().readData();
         return "";
     }
-    public String getStructure(){
+
+    public String getStructure() {
         String html = String.format("<h1>Wuzzuf Data Schema</h1>") +
                 String.format("<h2 style=\"text-align:center;\"> Total records = %d</h2>", wuzzufData.count()) +
                 String.format("<h2 style=\"text-align:center;\"> Schema </h2>") +
@@ -42,7 +50,8 @@ public class AnalysisHelper {
         html += "</table>";
         return html;
     }
-    private String datasetToTable(Dataset<Row> df){
+
+    private String datasetToTable(Dataset<Row> df) {
         String html = "<table style=\"width:100%;text-align: center\">";
         html += "<thead>";
         html += "<tr>";
@@ -64,35 +73,66 @@ public class AnalysisHelper {
         html += "</table>";
         return html;
     }
-    public String getSummary(){
+
+    public String getSummary() {
         WuzzufJobsAnalysis inst = WuzzufJobsAnalysis.getInstance();
-        Dataset<Row> summary = inst.encodeCategories(wuzzufData).describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp");
+        Dataset<Row> summary = inst.encodeCategories(wuzzufData).describe("type-factorized", "level-factorized",
+                "MaxYearsExp", "MinYearsExp");
         String html = String.format("<h1>Wuzzuf Data Summary</h1>");
         html += this.datasetToTable(summary);
         return html;
     }
-    public String getTitlesChart(){
+
+    public String getTitlesChart() {
+        String path = IMG_PATH + POPULAR_TITLES_CHART + ".jpg";
+        File file = new File(path);
+        if (!file.exists()) {
+            WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
+        }
+        String html = String.format("<h1>%s</h1>", POPULAR_TITLES_CHART.replace("-", " ")) +
+                String.format("<img src=\"%s\">", path);
+        return html;
+    }
+
+    public String getSkillsChart() {
+        String path = IMG_PATH + POPULAR_SKILLS_CHART + ".jpg";
+        File file = new File(path);
+        if (!file.exists()) {
+            WuzzufJobsAnalysis.getInstance().JobSkillsBarGraph(wuzzufData);
+        }
+        String html = String.format("<h1>%s</h1>", POPULAR_SKILLS_CHART.replace("-", " ")) +
+                String.format("<img src=\"%s\">", path);
+        return html;
+    }
+
+    public String getAreasChart() {
+        String path = IMG_PATH + POPULAR_AREAS_CHART + ".jpg";
+        File file = new File(path);
+        if (!file.exists()) {
+            WuzzufJobsAnalysis.getInstance().AreasCountBarGraph(wuzzufData);
+        }
+        String html = String.format("<h1>%s</h1>", POPULAR_AREAS_CHART.replace("-", " ")) +
+                String.format("<img src=\"%s\">", path);
+        return html;
+    }
+
+    public String getJobsChart() {
         return "";
     }
-    public String geSkillsChart(){
+
+    public String getTitlesTable() {
         return "";
     }
-    public String getAreasChart(){
+
+    public String geSkillsTable() {
         return "";
     }
-    public String getJobsChart(){
+
+    public String getAreasTable() {
         return "";
     }
-    public String getTitlesTable(){
-        return "";
-    }
-    public String geSkillsTable(){
-        return "";
-    }
-    public String getAreasTable(){
-        return "";
-    }
-    public String getJobsTable(){
+
+    public String getJobsTable() {
         return "";
     }
 }

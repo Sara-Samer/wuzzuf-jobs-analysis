@@ -33,4 +33,22 @@ public class WuzzufAnalysisController {
         return ResponseEntity.ok(res);
     }
 
+    @GetMapping("/most-popular-skills")
+    public ResponseEntity<String> mostPopularSkills() {
+        String res = AnalysisHelper.getInstance().getSkillsChart();
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/most-popular-titles")
+    public ResponseEntity<String> mostPopularTitles() {
+        String res = AnalysisHelper.getInstance().getTitlesChart();
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/most-popular-areas")
+    public ResponseEntity<String> mostPopularAreas() {
+        String res = AnalysisHelper.getInstance().getAreasChart();
+        return ResponseEntity.ok(res);
+    }
+
 }
