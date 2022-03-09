@@ -17,7 +17,7 @@ public class WuzzufJobsAnalysisApplication {
 				.config("spark.master", "local")
 				.getOrCreate();
 		
-		(new WuzzufJobsAnalysis()).readData();
+		WuzzufJobsAnalysis.getInstance().readData();
 
 		SpringApplication.run(WuzzufJobsAnalysisApplication.class, args);
 	}

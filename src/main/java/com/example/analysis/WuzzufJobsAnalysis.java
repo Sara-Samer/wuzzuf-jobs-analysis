@@ -36,8 +36,17 @@ public class WuzzufJobsAnalysis {
     Dataset<Row> wuzzufData;
     SparkSession spark;
     UDFUtils udfUtil;
+    final String path = "src/main/resources/Wuzzuf_Jobs.csv";
 
-    public WuzzufJobsAnalysis() {
+    private static WuzzufJobsAnalysis instance;
+
+    public static WuzzufJobsAnalysis getInstance() {
+        if (instance == null) {
+            instance = new WuzzufJobsAnalysis();
+        }
+        return instance;
+    }
+    private WuzzufJobsAnalysis() {
         spark = SparkSession.builder().getOrCreate();
         spark.sparkContext().setLogLevel("ERROR");
         udfUtil = new UDFUtils(spark.sqlContext());
@@ -46,39 +55,38 @@ public class WuzzufJobsAnalysis {
         udfUtil.registerColumnMinExpUdf();
     }
 
-    public void readData() {
-        spark.sparkContext().setLogLevel("ERROR");
-
+    public Dataset<Row> readData() {
         DataLoaderDAO loader = new WuzzufJobsCsv();
-        wuzzufData = loader.load("src/main/resources/Wuzzuf_Jobs.csv");
-        wuzzufData = createTempView(wuzzufData);
-        wuzzufData = encodeCategories(wuzzufData);
-        wuzzufData = factoriesYearsOfExp(wuzzufData);
-        wuzzufData.printSchema();
-        System.out.println("+++++========++++++++Done");
-        System.out.println("+++++========++++++++Done");
-        wuzzufData.show();
-        System.out.println("+++++========++++++++Done");
-        wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
-        System.out.println("+++++========++++++++Done");
-        // clean Data.
-        // cleanData();
-        // this.jobsByCompany();
+        wuzzufData = loader.load(path);
+        return wuzzufData;
+        // wuzzufData = createTempView(wuzzufData);
+        // wuzzufData = encodeCategories(wuzzufData);
+        // wuzzufData = factoriesYearsOfExp(wuzzufData);
+        // wuzzufData.printSchema();
+        // System.out.println("+++++========++++++++Done");
+        // System.out.println("+++++========++++++++Done");
+        // wuzzufData.show();
+        // System.out.println("+++++========++++++++Done");
+        // wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
+        // System.out.println("+++++========++++++++Done");
+        // // clean Data.
+        // // cleanData();
+        // // this.jobsByCompany();
 
-        // Count the jobs for each company and display that in order
+        // // Count the jobs for each company and display that in order
 
 
-        Dataset<Row> MostTitles =MostPopularTitles(wuzzufData);
-        MostTitles.show();
-        JobTitlesBarGraph(wuzzufData);
-        System.out.println("+++++========++++++++Done");
-        Dataset<Row> MostAreas = MostPopularAreas(wuzzufData);
-        MostAreas.show();
-        AreasCountBarGraph(wuzzufData);
-        System.out.println("+++++========++++++++Done");
+        // Dataset<Row> MostTitles =MostPopularTitles(wuzzufData);
+        // MostTitles.show();
+        // JobTitlesBarGraph(wuzzufData);
+        // System.out.println("+++++========++++++++Done");
+        // Dataset<Row> MostAreas = MostPopularAreas(wuzzufData);
+        // MostAreas.show();
+        // AreasCountBarGraph(wuzzufData);
+        // System.out.println("+++++========++++++++Done");
 
-        Map<String, Integer> skills = mostPopularSkills(wuzzufData);
-        JobSkillsBarGraph(skills, 10);
+        // Map<String, Integer> skills = mostPopularSkills(wuzzufData);
+        // JobSkillsBarGraph(skills, 10);
         //Map skills_map = mostPopularSkills(wuzzufData);
 
         // this is a change in intellij
@@ -181,7 +189,7 @@ public class WuzzufJobsAnalysis {
 
        chart.addSeries (SeriesName, Col_Selection, counts);
 
-        new SwingWrapper(chart).displayChart ();
+        // new SwingWrapper(chart).displayChart ();
     }
 
     public void JobTitlesBarGraph(Dataset<Row> df)
@@ -213,7 +221,7 @@ public class WuzzufJobsAnalysis {
 
         chart.addSeries("Skill's Count", Col_Selection.subList(0, show), counts.subList(0, show));
 
-        new SwingWrapper(chart).displayChart();
+        // new SwingWrapper(chart).displayChart();
     }
 
     public void AreasCountBarGraph(Dataset<Row> df)
