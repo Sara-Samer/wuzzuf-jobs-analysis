@@ -5,32 +5,26 @@ import com.example.dataloader.dao.DataLoaderDAO;
 import com.example.utils.UDFUtils;
 import org.apache.spark.ml.feature.StringIndexer;
 import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
-import java.util.List;
-
-import static com.example.utils.Constants.*;
 import static org.apache.spark.sql.functions.callUDF;
 import static org.apache.spark.sql.functions.col;
-
-import org.apache.spark.sql.*;
-import org.apache.spark.ml.feature.StringIndexer;
 
 import static java.util.stream.Collectors.*;
-import static org.apache.spark.sql.functions.col;
-import static org.apache.spark.sql.functions.callUDF;
 
-import com.example.dataloader.WuzzufJobsCsv;
-import com.example.dataloader.dao.DataLoaderDAO;
-import com.example.utils.UDFUtils;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.style.Styler;
-import org.apache.spark.sql.Row;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Function;
 
 import static com.example.utils.Constants.COLUMN_PARSE_YEARS_OF_EXP_UDF_NAME;
@@ -83,7 +77,8 @@ public class WuzzufJobsAnalysis {
         AreasCountBarGraph(wuzzufData);
         System.out.println("+++++========++++++++Done");
 
-        mostPopularSkills(wuzzufData);
+        Map<String, Integer> skills = mostPopularSkills(wuzzufData);
+        JobSkillsBarGraph(skills, 10);
         //Map skills_map = mostPopularSkills(wuzzufData);
 
         // this is a change in intellij
@@ -196,12 +191,29 @@ public class WuzzufJobsAnalysis {
 
     }
 
-    public void JobSkillsBarGraph(Dataset<Row> df)
+    public void JobSkillsBarGraph(Map<String, Integer> MostTitles_df, int show)
     {
+        List<String> Col_Selection = new ArrayList<String>();
+        List<Integer> counts = new ArrayList<Integer>();
+        for (Entry<String, Integer> entry : MostTitles_df.entrySet()) {
+            Col_Selection.add(entry.getKey());
+            counts.add(entry.getValue());
+        }
+        CategoryChart chart = new CategoryChartBuilder()
+                .width(900)
+                .height(600)
+                .title("Most Popular Skills")
+                .xAxisTitle("Skill")
+                .yAxisTitle("Count")
+                .build();
+        chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideN);
+        chart.getStyler().setHasAnnotations(true);
+        chart.getStyler().setStacked(true);
+        chart.getStyler().setXAxisLabelRotation(45);
 
-        Dataset<Row> MostTitles_df = (Dataset<Row>) mostPopularSkills( df);
-        DrawBarChart(MostTitles_df,"Title","count","Most Popular Title","Titles","Count","Titles's Count");
+        chart.addSeries("Skill's Count", Col_Selection.subList(0, show), counts.subList(0, show));
 
+        new SwingWrapper(chart).displayChart();
     }
 
     public void AreasCountBarGraph(Dataset<Row> df)

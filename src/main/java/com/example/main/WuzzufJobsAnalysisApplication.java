@@ -1,13 +1,9 @@
 package com.example.main;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-
 import com.example.analysis.WuzzufJobsAnalysis;
 
 import org.apache.spark.sql.SparkSession;
 import org.springframework.boot.SpringApplication;
-// import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
@@ -21,7 +17,6 @@ public class WuzzufJobsAnalysisApplication {
 				.config("spark.master", "local")
 				.getOrCreate();
 		
-		// spark.sparkContext().setLogLevel("ERROR");
 		(new WuzzufJobsAnalysis()).readData();
 
 		SpringApplication.run(WuzzufJobsAnalysisApplication.class, args);
