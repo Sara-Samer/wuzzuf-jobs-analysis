@@ -18,6 +18,11 @@
         <java.version>11</java.version>
     </properties>
 	<dependencies>
+        <!-- For showing images -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
         <!-- Execluded tomcat and included jettey for spring to run on jetty as there was an error eplained in this stack answer -->
         <!-- https://stackoverflow.com/a/60599887/12207010 -->
         <dependency>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class WuzzufAnalysisController {
+
     @GetMapping("/")
     public String index() {
         return "Hi Dear User";
@@ -33,10 +34,17 @@ public class WuzzufAnalysisController {
         return ResponseEntity.ok(res);
     }
 
+    // @GetMapping(value = "/most-popular-skills", produces = MediaType.IMAGE_JPEG_VALUE)
+    // public @ResponseBody byte[] getImageWithMediaType() throws IOException {
+    //     InputStream in = getClass().getResourceAsStream("/Most-Popular-Areas.png");
+    //     // InputStream in = getClass().getResourceAsStream("/com/example/main/controllers/img.png");
+    //     return IOUtils.toByteArray(in);
+    // }
+
     @GetMapping("/most-popular-skills")
     public ResponseEntity<String> mostPopularSkills() {
-        String res = AnalysisHelper.getInstance().getSkillsChart();
-        return ResponseEntity.ok(res);
+        String html = AnalysisHelper.getInstance().getSkillsChart();
+        return ResponseEntity.ok().body(html);
     }
 
     @GetMapping("/most-popular-titles")

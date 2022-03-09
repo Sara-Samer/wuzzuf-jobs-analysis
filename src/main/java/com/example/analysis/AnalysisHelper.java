@@ -13,6 +13,8 @@ import static com.example.utils.Constants.IMG_PATH;;
 
 public class AnalysisHelper {
     Dataset<Row> wuzzufData;
+    String fileExtention = ".jpg";
+    
     private static AnalysisHelper instance;
 
     private AnalysisHelper() {
@@ -84,35 +86,35 @@ public class AnalysisHelper {
     }
 
     public String getTitlesChart() {
-        String path = IMG_PATH + POPULAR_TITLES_CHART + ".jpg";
+        String path = IMG_PATH + POPULAR_TITLES_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
             WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_TITLES_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">", path);
+                String.format("<img src=\"%s\">",  "/" + POPULAR_TITLES_CHART + this.fileExtention);
         return html;
     }
 
     public String getSkillsChart() {
-        String path = IMG_PATH + POPULAR_SKILLS_CHART + ".jpg";
+        String path = IMG_PATH + POPULAR_SKILLS_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
-            WuzzufJobsAnalysis.getInstance().JobSkillsBarGraph(wuzzufData);
+            WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_SKILLS_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">", path);
+                String.format("<img src=\"%s\">",  "/" + POPULAR_SKILLS_CHART + this.fileExtention);
         return html;
     }
 
     public String getAreasChart() {
-        String path = IMG_PATH + POPULAR_AREAS_CHART + ".jpg";
+        String path = IMG_PATH + POPULAR_AREAS_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
-            WuzzufJobsAnalysis.getInstance().AreasCountBarGraph(wuzzufData);
+            WuzzufJobsAnalysis.getInstance().JobTitlesBarGraph(wuzzufData);
         }
         String html = String.format("<h1>%s</h1>", POPULAR_AREAS_CHART.replace("-", " ")) +
-                String.format("<img src=\"%s\">", path);
+                String.format("<img src=\"%s\">",  "/" + POPULAR_AREAS_CHART + this.fileExtention);
         return html;
     }
 
