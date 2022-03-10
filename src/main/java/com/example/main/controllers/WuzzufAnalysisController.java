@@ -43,6 +43,7 @@ public class WuzzufAnalysisController {
 
     @GetMapping("/most-popular-skills")
     public ResponseEntity<String> mostPopularSkills() {
+
         String html = AnalysisHelper.getInstance().getSkillsChart();
         return ResponseEntity.ok().body(html);
     }
@@ -62,18 +63,19 @@ public class WuzzufAnalysisController {
     @GetMapping("/most-skills-table")
     public ResponseEntity<String> mostPopularSkillsTable() {
         String html = AnalysisHelper.getInstance().getSkillsTable();
+
         return ResponseEntity.ok().body(html);
     }
 
     @GetMapping("/most-titles-table")
     public ResponseEntity<String> mostPopularTitlesTable() {
-        String res = AnalysisHelper.getInstance().getTitlesTable();
-        return ResponseEntity.ok(res);
+        String html = AnalysisHelper.getInstance().getTitlesTable();
+        return ResponseEntity.ok().body(html);
     }
 
     @GetMapping("/most-areas-table")
     public ResponseEntity<String> mostPopularAreasTable() {
-        String res = AnalysisHelper.getInstance().getAreasTable();
-        return ResponseEntity.ok(res);
+        String html = AnalysisHelper.getInstance().getAreasTable();
+        return ResponseEntity.ok().body(html);
     }
 }
