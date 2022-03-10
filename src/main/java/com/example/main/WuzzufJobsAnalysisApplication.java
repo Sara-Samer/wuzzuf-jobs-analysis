@@ -18,6 +18,7 @@ public class WuzzufJobsAnalysisApplication {
 				.getOrCreate();
 		spark.sparkContext().setLogLevel("ERROR");
 		(new WuzzufJobsAnalysis()).readData();
+
 		// SpringApplication.run(WuzzufJobsAnalysisApplication.class, args);
 	}
 

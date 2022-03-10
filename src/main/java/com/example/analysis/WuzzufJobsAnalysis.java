@@ -55,58 +55,77 @@ public class WuzzufJobsAnalysis {
     public void readData() {
         DataLoaderDAO loader = new WuzzufJobsCsv();
         wuzzufData = loader.load("src/main/resources/Wuzzuf_Jobs.csv");
-        wuzzufData = createTempView(wuzzufData);
+        createTempView(wuzzufData, "WUZZUF_DATA");
+        wuzzufData = getTypedDataset("WUZZUF_DATA");
         wuzzufData = encodeCategories(wuzzufData);
         wuzzufData = factoriesYearsOfExp(wuzzufData);
-        wuzzufData.printSchema();
-        System.out.println("+++++========++++++++Done");
-        System.out.println("+++++========++++++++Done");
-        wuzzufData.show();
-        System.out.println("+++++========++++++++Done");
-        wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
-        System.out.println("+++++========++++++++Done");
-        // clean Data.
-        cleanData();
-        this.jobsByCompany();
-
+        createTempView(wuzzufData, "WUZZUF_DATA");
+//        //wuzzufData.printSchema();
+//        System.out.println("+++++========++++++++Done");
+//        System.out.println("+++++========++++++++Done");
+//        wuzzufData.show();
+//        System.out.println("+++++========++++++++Done");
+//        wuzzufData.describe("type-factorized", "level-factorized", "MaxYearsExp", "MinYearsExp").show();
+//        System.out.println("+++++========++++++++Done");
+//        // clean Data.
+//        Dataset<Row> testDF = cleanData(wuzzufData, "WUZZUF_DATA");
+//        testDF.printSchema();
+//        testDF.show();
+//        //System.exit(1);
+//        this.jobsByCompany();
+        this.getKMeans();
+      String kmeans = (new Kmeans()).calculateKMeans(wuzzufData);
+        System.out.println(kmeans);
         // Count the jobs for each company and display that in order
 
 
-        Dataset<Row> MostTitles =MostPopularTitles(wuzzufData);
-        MostTitles.show();
-        JobTitlesBarGraph(wuzzufData);
-        System.out.println("+++++========++++++++Done");
-        Dataset<Row> MostAreas = MostPopularAreas(wuzzufData);
-        MostAreas.show();
-        AreasCountBarGraph(wuzzufData);
-        System.out.println("+++++========++++++++Done");
-        mostPopularSkills(wuzzufData);
 
-        //Map skills_map = mostPopularSkills(wuzzufData);
+//        Dataset<Row> MostTitles =MostPopularTitles(wuzzufData);
+//        MostTitles.show();
+//        JobTitlesBarGraph(wuzzufData);
+//        System.out.println("+++++========++++++++Done");
+//        Dataset<Row> MostAreas = MostPopularAreas(wuzzufData);
+//        MostAreas.show();
+//        AreasCountBarGraph(wuzzufData);
+//        System.out.println("+++++========++++++++Done");
+//        mostPopularSkills(wuzzufData);
+//
+//        Map skills_map = mostPopularSkills(wuzzufData);
 
-        // this is a change in intellij
-        //Dataset<Row> ww= mostPopularSkills(wuzzufData);
-        //ww.show();
-        //JobSkillsBarGraph (wuzzufData);
+//         this is a change in intellij
+//        Dataset<Row> ww= mostPopularSkills(wuzzufData);
+//        ww.show();
+//        JobSkillsBarGraph (wuzzufData);
 
     }
-    //clean data
-    private void cleanData() {
+
+    public String getKMeans(){
+        return Kmeans.calculateKMeans(wuzzufData);
+    }
+
+
+    private Dataset<Row> cleanData(Dataset<Row> df, String name) {
         // Remove Duplicates:
-        wuzzufData = wuzzufData.dropDuplicates();
-        // Remove Nulls from YearsOfExp column
-        String sql = "Select * FROM WuzzufJobs WHERE YearsExp != \"null Yrs of Exp\"";
-        wuzzufData.createOrReplaceTempView ("WuzzufJobs");
-        wuzzufData = spark.sql(sql);
+        df = df.dropDuplicates();
+        df.show();
+        String[] stringarray = { "MaxYearsExp", "MinYearsExp"};
+        String[] strArray = new String[] {"MaxYearsExp", "MinYearsExp"};
+        System.out.print(strArray[0] + " " +strArray[1]);
+        df.na().drop(strArray);
+        return df;
     }
+
+
+
     // return some of first rows from data ---- it need number of line that you want to display.
     public Dataset<Row> getHeadData(int number){
         // Create view and execute query to display first n rows of WuzzufJobs data:
         this.wuzzufData.createOrReplaceTempView ("WuzzufJobs");
         return this.spark.sql("SELECT * FROM WuzzufJobs LIMIT "+ number+";");
     }
+
     public String jobsByCompany(){
-        Dataset<Row> company = wuzzufData.groupBy("Company").count().orderBy(col("count").desc()).limit(20);
+        Dataset<Row> company = wuzzufData.groupBy("Company").count().orderBy(col("count").desc()).limit(10);
         company.printSchema();
         //System.exit(1);
         PieCharts.popularCompanies(company);
@@ -114,10 +133,38 @@ public class WuzzufJobsAnalysis {
         return null;
     }
 
+    // return dataset of special data which you need from sqlQuery.
+    public Dataset<Row> sqlQuery(String sql,String viewName){
+        // Create view and execute query what  you want.
+        this.wuzzufData.createOrReplaceTempView (viewName);
+        return this.spark.sql(sql);
 
-    public Dataset<Row> createTempView(Dataset<Row> df) {
-        df.createOrReplaceTempView("WUZZUF_DATA");
+    }
 
+
+
+//    private String getOutput(Dataset<Row> ds, String header){
+//        // Output
+//        List<String> data = ds.toJSON().collectAsList();
+//
+//        String output = "<html><body>";
+//        output += "<h1>"+header+"</h1><br><p>";
+//        for (String str : data){
+//            String s = str.toString().replace("\"", "").replace(":", "-->");
+//            String[] strList = s.split(",",8);
+//            for (String attrib : strList){
+//                output = output + attrib;
+//                output += "<br>";
+//            }
+//            output += "<br>";
+//        }
+//        output += "</p></body></html>";
+//        return output;
+//    }
+    public void createTempView(Dataset<Row> df, String name){
+        df.createOrReplaceTempView(name);
+    }
+    public Dataset<Row> getTypedDataset(String name) {
         Dataset<Row> typedDataset = spark.sql("SELECT "
                 + "cast (Title as string) Title, "
                 + "cast (Company as string) Company, "
@@ -126,7 +173,7 @@ public class WuzzufJobsAnalysis {
                 + "cast (Level as string) Level, "
                 + "cast (YearsExp as string) YearsExp, "
                 + "cast (Country as string) Country, "
-                + "cast (Skills as string) Skills FROM WUZZUF_DATA");
+                + "cast (Skills as string) Skills FROM " + name);
         return typedDataset;
     }
 
@@ -245,7 +292,6 @@ public class WuzzufJobsAnalysis {
         }
         return (sorted_skillset);
     }
-
 
 
 }
