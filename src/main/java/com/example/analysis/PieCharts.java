@@ -5,9 +5,12 @@ import org.apache.spark.sql.Row;
 import org.knowm.xchart.*;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+;import static com.example.utils.Constants.*;
+
 
 public class PieCharts implements ExampleChart<PieChart>{
     // Method for creating pie chart of top ten companies posting jobs:
@@ -36,12 +39,15 @@ public class PieCharts implements ExampleChart<PieChart>{
         String title = "Top ten Companies Posting jobs at Wuzzuf";
         PieChart chart = popularCompChart.getChart(top_companies,Counts,title,xaxis);
         //Display the chart:
-        new SwingWrapper<PieChart>(chart).displayChart();
+        //new SwingWrapper<PieChart>(chart).displayChart();
         try {
-            BitmapEncoder.saveBitmap(chart,"C:\\Users\\BTC\\IdeaProjects\\final_project\\wuzzuf-jobs-analysis-main\\src\\main\\resources\\companyjobspiechart", BitmapEncoder.BitmapFormat.PNG);
+            String imgPath = IMG_PATH + POPULAR_JOBS_CHART;
+            BitmapEncoder.saveBitmap(chart,imgPath, BitmapEncoder.BitmapFormat.JPG);
+
+           // BitmapEncoder.saveBitmap(chart,"C:\\Users\\BTC\\IdeaProjects\\final_project\\wuzzuf-jobs-analysis-main\\src\\main\\resources\\companyjobspiechart", BitmapEncoder.BitmapFormat.PNG);
         }
-        catch (Exception e){
-            System.out.println(e);
+        catch (IOException e){
+            e.printStackTrace();
             System.out.println("NOT Found path");
         }
     }

@@ -68,72 +68,26 @@ public class WuzzufJobsAnalysis {
     }
 
 
-    public void getKMeans(Dataset<Row> df){
-        createTempView(df, "WUZZUF_DATA");
-        String kmeans = (new Kmeans()).calculateKMeans(df);
-        System.out.println(kmeans);
-    }
-  
+    public long[] cleanData(Dataset<Row> df) {
 
+        // Original data
+        long[] dfs = new long[3];
+        dfs[0]=df.count();
 
-    private Dataset<Row> cleanData(Dataset<Row> df, String name) {
         // Remove Duplicates:
         df = df.dropDuplicates();
-        df.show();
-        String[] stringarray = { "MaxYearsExp", "MinYearsExp"};
+        dfs[1]=df.count();
+
+        //Remove Null Data
         String[] strArray = new String[] {"MaxYearsExp", "MinYearsExp"};
-        System.out.print(strArray[0] + " " +strArray[1]);
         df.na().drop(strArray);
-        return df;
-    }
-    // return some of first rows from data ---- it need number of line that you want to display.
-    public Dataset<Row> getHeadData(int number){
-        // Create view and execute query to display first n rows of WuzzufJobs data:
-        this.wuzzufData.createOrReplaceTempView ("WuzzufJobs");
-        return this.spark.sql("SELECT * FROM WuzzufJobs LIMIT "+ number+";");
+        dfs[2]=df.count();
+
+        return dfs;
     }
 
-    public Dataset<Row> jobsByCompany(Dataset<Row> df){
-        Dataset<Row> company = df.groupBy("Company").count().orderBy(col("count").desc()).limit(10);
-        // company.printSchema();
-        // System.exit(1);
-        // PieCharts.popularCompanies(company);
-        return company;
-    }
-
-
-//    private String getOutput(Dataset<Row> ds, String header){
-//        // Output
-//        List<String> data = ds.toJSON().collectAsList();
-//
-//        String output = "<html><body>";
-//        output += "<h1>"+header+"</h1><br><p>";
-//        for (String str : data){
-//            String s = str.toString().replace("\"", "").replace(":", "-->");
-//            String[] strList = s.split(",",8);
-//            for (String attrib : strList){
-//                output = output + attrib;
-//                output += "<br>";
-//            }
-//            output += "<br>";
-//        }
-//        output += "</p></body></html>";
-//        return output;
-//    }
     public void createTempView(Dataset<Row> df, String name){
         df.createOrReplaceTempView(name);
-    }
-    public Dataset<Row> getTypedDataset(String name) {
-        Dataset<Row> typedDataset = spark.sql("SELECT "
-                + "cast (Title as string) Title, "
-                + "cast (Company as string) Company, "
-                + "cast (Location as string) Location, "
-                + "cast (Type as string) Type, "
-                + "cast (Level as string) Level, "
-                + "cast (YearsExp as string) YearsExp, "
-                + "cast (Country as string) Country, "
-                + "cast (Skills as string) Skills FROM " + name);
-        return typedDataset;
     }
 
     public Dataset<Row> encodeCategories(Dataset<Row> df) {
@@ -158,6 +112,56 @@ public class WuzzufJobsAnalysis {
         df = df.drop("MinMaxYearsExp", "YearsExp");
 
         return df;
+    }
+
+
+    // return some of first rows from data ---- it need number of line that you want to display.
+    public Dataset<Row> getHeadData(int number){
+        // Create view and execute query to display first n rows of WuzzufJobs data:
+        this.wuzzufData.createOrReplaceTempView ("WuzzufJobs");
+        return this.spark.sql("SELECT * FROM WuzzufJobs LIMIT "+ number+";");
+    }
+
+    public Dataset<Row> getTypedDataset(String name) {
+        Dataset<Row> typedDataset = spark.sql("SELECT "
+                + "cast (Title as string) Title, "
+                + "cast (Company as string) Company, "
+                + "cast (Location as string) Location, "
+                + "cast (Type as string) Type, "
+                + "cast (Level as string) Level, "
+                + "cast (YearsExp as string) YearsExp, "
+                + "cast (Country as string) Country, "
+                + "cast (Skills as string) Skills FROM " + name);
+        return typedDataset;
+    }
+
+
+
+//    private String getOutput(Dataset<Row> ds, String header){
+//        // Output
+//        List<String> data = ds.toJSON().collectAsList();
+//
+//        String output = "<html><body>";
+//        output += "<h1>"+header+"</h1><br><p>";
+//        for (String str : data){
+//            String s = str.toString().replace("\"", "").replace(":", "-->");
+//            String[] strList = s.split(",",8);
+//            for (String attrib : strList){
+//                output = output + attrib;
+//                output += "<br>";
+//            }
+//            output += "<br>";
+//        }
+//        output += "</p></body></html>";
+//        return output;
+//    }
+
+
+    public Dataset<Row> jobsByCompany(Dataset<Row> df){
+        Dataset<Row> company = df.groupBy("Company").count().orderBy(col("count").desc());
+        // company.printSchema();
+        // PieCharts.popularCompanies(company);
+        return company;
     }
 
     public Dataset<Row> FindMostPopular(Dataset<Row> df, String ColName) {
@@ -268,5 +272,13 @@ public class WuzzufJobsAnalysis {
         // }
         return (sorted_skillset);
     }
+
+    public String getKMeans(Dataset<Row> df){
+        createTempView(df, "WUZZUF_DATA");
+        String kmeans = (new Kmeans()).calculateKMeans(df);
+        System.out.println(kmeans);
+        return kmeans;
+    }
+
 
 }

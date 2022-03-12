@@ -1,6 +1,7 @@
 package com.example.main.controllers;
 
 import com.example.analysis.AnalysisHelper;
+import com.example.analysis.Kmeans;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +35,29 @@ public class WuzzufAnalysisController {
         return ResponseEntity.ok(res);
     }
 
+    @GetMapping("/cleandata")
+    public ResponseEntity<String> cleandata() {
+        String res = AnalysisHelper.getInstance().cleanData();
+        return ResponseEntity.ok(res);
+    }
+
     // @GetMapping(value = "/most-popular-skills", produces = MediaType.IMAGE_JPEG_VALUE)
     // public @ResponseBody byte[] getImageWithMediaType() throws IOException {
     //     InputStream in = getClass().getResourceAsStream("/Most-Popular-Areas.png");
     //     // InputStream in = getClass().getResourceAsStream("/com/example/main/controllers/img.png");
     //     return IOUtils.toByteArray(in);
     // }
+    @GetMapping("/count-jops-table")
+    public ResponseEntity<String> JobsPerCompany() {
+        String html = AnalysisHelper.getInstance().getJobsTable();
+        return ResponseEntity.ok().body(html);
+    }
+
+    @GetMapping("/most-jobs-chart")
+    public ResponseEntity<String> mostJobsChart() {
+        String html = AnalysisHelper.getInstance().getJobsChart();
+        return ResponseEntity.ok(html);
+    }
 
     @GetMapping("/most-popular-skills")
     public ResponseEntity<String> mostPopularSkills() {
@@ -76,6 +94,11 @@ public class WuzzufAnalysisController {
     @GetMapping("/most-areas-table")
     public ResponseEntity<String> mostPopularAreasTable() {
         String html = AnalysisHelper.getInstance().getAreasTable();
+        return ResponseEntity.ok().body(html);
+    }
+    @GetMapping("/k-means")
+    public  ResponseEntity<String> K_means(){
+        String html = AnalysisHelper.getInstance().getKmeans();
         return ResponseEntity.ok().body(html);
     }
 }

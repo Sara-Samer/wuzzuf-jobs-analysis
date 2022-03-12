@@ -10,5 +10,6 @@ public class Constants {
     public static final String POPULAR_TITLES_CHART = "Most-Popular-Titles";
     public static final String POPULAR_SKILLS_CHART = "Most-Popular-Skills";
     public static final String POPULAR_AREAS_CHART = "Most-Popular-Areas";
+    public static final String POPULAR_JOBS_CHART = "Most-Popular-Jobs";
     public static final String IMG_PATH = "src/main/resources/";
 }

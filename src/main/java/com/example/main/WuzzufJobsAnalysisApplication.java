@@ -18,7 +18,7 @@ public class WuzzufJobsAnalysisApplication implements WebMvcConfigurer {
 				.master("local[2]")
 				.config("spark.master", "local")
 				.getOrCreate();
-    spark.sparkContext().setLogLevel("ERROR");
+    //spark.sparkContext().setLogLevel("ERROR");
 		SpringApplication.run(WuzzufJobsAnalysisApplication.class, args);
 	}
 

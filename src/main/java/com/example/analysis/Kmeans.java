@@ -66,6 +66,7 @@ public class Kmeans {
 
         output += "<br>" + "Within Set Sum of Square Error: " + WithinError+"<br>";
         output += "</p></body></html>";
+
         return output;
 
     }
