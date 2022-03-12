@@ -68,20 +68,20 @@ public class WuzzufJobsAnalysis {
     }
 
 
-    public long[] cleanData(Dataset<Row> df) {
+    public List<Dataset<Row>> cleanData(Dataset<Row> df) {
 
         // Original data
-        long[] dfs = new long[3];
-        dfs[0]=df.count();
+        List<Dataset<Row>> dfs = new ArrayList<>();
+        dfs.add(df);
 
         // Remove Duplicates:
         df = df.dropDuplicates();
-        dfs[1]=df.count();
+        dfs.add(df);
 
         //Remove Null Data
         String[] strArray = new String[] {"MaxYearsExp", "MinYearsExp"};
         df.na().drop(strArray);
-        dfs[2]=df.count();
+        dfs.add(df);
 
         return dfs;
     }

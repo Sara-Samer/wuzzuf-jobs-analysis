@@ -59,24 +59,6 @@ public class WuzzufAnalysisController {
         return ResponseEntity.ok(html);
     }
 
-    @GetMapping("/most-popular-skills")
-    public ResponseEntity<String> mostPopularSkills() {
-
-        String html = AnalysisHelper.getInstance().getSkillsChart();
-        return ResponseEntity.ok().body(html);
-    }
-
-    @GetMapping("/most-popular-titles")
-    public ResponseEntity<String> mostPopularTitles() {
-        String res = AnalysisHelper.getInstance().getTitlesChart();
-        return ResponseEntity.ok(res);
-    }
-
-    @GetMapping("/most-popular-areas")
-    public ResponseEntity<String> mostPopularAreas() {
-        String res = AnalysisHelper.getInstance().getAreasChart();
-        return ResponseEntity.ok(res);
-    }
 
     @GetMapping("/most-skills-table")
     public ResponseEntity<String> mostPopularSkillsTable() {
@@ -85,10 +67,24 @@ public class WuzzufAnalysisController {
         return ResponseEntity.ok().body(html);
     }
 
+    @GetMapping("/most-skills-chart")
+    public ResponseEntity<String> mostPopularSkills() {
+
+        String html = AnalysisHelper.getInstance().getSkillsChart();
+        return ResponseEntity.ok().body(html);
+    }
+
+
     @GetMapping("/most-titles-table")
     public ResponseEntity<String> mostPopularTitlesTable() {
         String html = AnalysisHelper.getInstance().getTitlesTable();
         return ResponseEntity.ok().body(html);
+    }
+
+    @GetMapping("/most-titles-chart")
+    public ResponseEntity<String> mostPopularTitles() {
+        String res = AnalysisHelper.getInstance().getTitlesChart();
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/most-areas-table")
@@ -96,6 +92,15 @@ public class WuzzufAnalysisController {
         String html = AnalysisHelper.getInstance().getAreasTable();
         return ResponseEntity.ok().body(html);
     }
+
+
+    @GetMapping("/most-areas-chart")
+    public ResponseEntity<String> mostPopularAreas() {
+        String res = AnalysisHelper.getInstance().getAreasChart();
+        return ResponseEntity.ok(res);
+    }
+
+
     @GetMapping("/k-means")
     public  ResponseEntity<String> K_means(){
         String html = AnalysisHelper.getInstance().getKmeans();

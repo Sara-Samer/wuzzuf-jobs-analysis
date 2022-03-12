@@ -38,11 +38,11 @@ public class AnalysisHelper {
     }
 
     public String cleanData() {
-        long[] dfs = WuzzufJobsAnalysis.getInstance().cleanData(wuzzufData);
+        List<Dataset<Row>> dfs = WuzzufJobsAnalysis.getInstance().cleanData(wuzzufData);
         String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>","Clean Data") +
-                String.format("<h2 style=\"text-align:center;\"> Total records Before Clean = %d</h2>", dfs[0]) +
-                String.format("<h2 style=\"text-align:center;\"> Total records After Remove Duplicates = %d</h2>",dfs[1]) +
-                String.format("<h2 style=\"text-align:center;\"> Total records After Drop Null Data = %d</h2>",dfs[2])+
+                String.format("<h2 style=\"text-align:center;\"> Total records Before Clean = %d</h2>", dfs.get(0).count()) +
+                String.format("<h2 style=\"text-align:center;\"> Total records After Remove Duplicates = %d</h2>", dfs.get(1).count()) +
+                String.format("<h2 style=\"text-align:center;\"> Total records After Drop Null Data = %d</h2>", dfs.get(2).count())+
                 "<table style=\"border:1px solid black;width:100%;text-align: center\">";
 
         return html;
@@ -158,7 +158,7 @@ public class AnalysisHelper {
         Dataset<Row> table = WuzzufJobsAnalysis.getInstance().MostPopularAreas(wuzzufData);
         List<String> label =dfToList(table);
 
-        String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:SpringGreen;\">%s</h1>", "The most popular areas") +
+        String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>", "The most popular areas") +
                 "<table style=\"border:1px solid black; border-collapse: collapse;margin-left:auto;margin-right:auto; width:70%;text-align:center; \" >" +
                 "<tr ><th style= \" border: 1px solid;\">Area</th><th style= \" border: 1px solid;\">AreaCount</th></tr>";
 
@@ -200,8 +200,6 @@ public class AnalysisHelper {
 
     public String getKmeans() {
         String html = WuzzufJobsAnalysis.getInstance().getKMeans(wuzzufData);
-
-
         return  html;
 
     }
