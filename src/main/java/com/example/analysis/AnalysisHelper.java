@@ -201,6 +201,7 @@ public class AnalysisHelper {
     public String getKmeans() {
         String html = WuzzufJobsAnalysis.getInstance().getKMeans(wuzzufData);
 
+
         return  html;
 
     }
@@ -218,7 +219,7 @@ public class AnalysisHelper {
         }
         return label;
     }
-    private String datasetToTable(Dataset<Row> df) {
+    public String datasetToTable(Dataset<Row> df) {
         String html = "<table style= \"border:1px solid black;border-collapse: collapse; margin-left:auto;margin-right:auto; width:80%;text-align:center\">";
         html += "<thead>";
         html += "<tr>";

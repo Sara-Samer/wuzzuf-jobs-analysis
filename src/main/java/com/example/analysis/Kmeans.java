@@ -16,6 +16,8 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Kmeans {
@@ -26,13 +28,13 @@ public class Kmeans {
         Dataset<Row> convert = sparkSession.sql("select Title, Company from WUZZUF_DATA");
         StringIndexerModel indexer = new StringIndexer()
                 .setInputCols(new String[] { "Title", "Company"})
-                .setOutputCols(new String[] { "TitleConv", "CompanyConv"})
+                .setOutputCols(new String[] { "TitlePredection", "CompanyPredection"})
                 .fit(convert);
 
         Dataset<Row> indexed = indexer.transform(convert);
         indexed.show();
         indexed.printSchema();
-        Dataset<Row> factorized = indexed.select("TitleConv", "CompanyConv");
+        Dataset<Row> factorized = indexed.select("TitlePredection", "CompanyPredection");
         factorized.show();
 
         System.out.println("+++++========++++++++kmeans");
@@ -55,17 +57,26 @@ public class Kmeans {
         double WithinError = clusters.computeCost(parsedData.rdd());
         System.out.println("Within Set Sum of Squared Errors = " + WithinError);
 
-        String output = "<html><body>";
-        output += "<h1>"+"Calculate KMeans Clustering:"+"</h1><br><p>";
-        System.out.println("Cluster centers:");
+        String output = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>","K-means to predict jobs class and company class") +
+                  "<table style=\"border:1px solid black;width:100%;text-align: center\">";
+
+        output += AnalysisHelper.getInstance().datasetToTable(indexed.limit(20));
+        output += "<html><body>";
+        output += "<h1 style=\"text-align:center;background-color:LightPink;\">"+"Cluster centers"+"</h1><br><p>";
+        System.out.println("Cluster centers and Error:");
+        int i=1;
         for (Vector str : clusters.clusterCenters()){
             System.out.println(" " + str);
-            output += str.toString();
-            output += "<br>";
+            output+= String.format("<h2 style=\"text-align:center;\">Cluster %d = %s</h2>", i,str.toString().replace("[","(").replace("]",")")) ;
+            //output += str.toString();
+            //output += "<br>";
+            i+=1;
         }
+        output+=String.format("<h2 style=\"text-align:center;\"> Within Set Sum of Square Error = %f</h2>",WithinError)+
+                "<table style=\"border:1px solid black;width:100%;text-align: center\">";
 
-        output += "<br>" + "Within Set Sum of Square Error: " + WithinError+"<br>";
-        output += "</p></body></html>";
+        //output += "<br>" + "Within Set Sum of Square Error: " + WithinError+"<br>";
+       // output += "</p></body></html>";
 
         return output;
 
