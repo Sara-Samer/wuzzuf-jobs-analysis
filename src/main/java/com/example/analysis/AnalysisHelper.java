@@ -33,9 +33,9 @@ public class AnalysisHelper {
         String res = "";
         res += "<div style=\"text-align:center\">";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/read\"><button> Read Data </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/cleandata\"><button> Clean Data </button></a>";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/summary\"><button> Data Summary </button></a>";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/struct\"><button> Data Structure </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/cleandata\"><button> Clean Data </button></a>";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/count-jobs-table\"><button> Most Popular Jobs Table </button></a>";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-jobs-chart\"><button> Most Popular Jobs Chart </button></a>";
         res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-skills-table\"><button> Most Popular Skills Table </button></a>";
@@ -64,7 +64,8 @@ public class AnalysisHelper {
                 String.format("<h2 style=\"text-align:center;\"> Total records After Remove Duplicates = %d</h2>", dfs.get(1).count()) +
                 String.format("<h2 style=\"text-align:center;\"> Total records After Drop Null Data = %d</h2>", dfs.get(2).count())+
                 "<table style=\"border:1px solid black;width:100%;text-align: center\">";
-
+        // html += this.datasetToTable(dfs.get(2).limit(30));
+        wuzzufData = dfs.get(2);
         return html;
     }
 
@@ -72,12 +73,17 @@ public class AnalysisHelper {
         String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>","Wuzzaf data schema") +
                 String.format("<h2 style=\"text-align:center;\"> Total records = %d</h2>", wuzzufData.count()) +
                 String.format("<h2 style=\"text-align:center;\"> Schema </h2>") +
-                "<table style=\"border:1px solid black;width:100%;text-align: center\">";
-        String[] st = wuzzufData.schema().toDDL().split(",");
+                "<table style= \"border:1px solid black;border-collapse: collapse; margin-left:auto;margin-right:auto; width:80%;text-align:center\">";
+        String[] st = wuzzufData.schema().toDDL().replaceAll("`", "").split(",");
 
         for (String st1 : st) {
-            html += "<tr><td><br>" + st1 + "</tr></td>";
+            String[] words = st1.split(" ");
+            html += "<tr>";
+            html += "<td style= \" border: 1px solid;\">" + words[0] + "</td>";
+            html += "<td style= \" border: 1px solid;\">" + words[1] + "</td>";
+            html += "</tr>";
         }
+
         html += "</table>";
         return html;
     }

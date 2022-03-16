@@ -80,7 +80,7 @@ public class WuzzufJobsAnalysis {
 
         //Remove Null Data
         String[] strArray = new String[] {"MaxYearsExp", "MinYearsExp"};
-        df.na().drop(strArray);
+        df = df.na().drop(strArray);
         dfs.add(df);
 
         return dfs;
