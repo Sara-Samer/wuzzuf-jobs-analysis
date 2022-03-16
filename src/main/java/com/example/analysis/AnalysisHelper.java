@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.List;
 
-;import static com.example.utils.Constants.*;
+import static com.example.utils.Constants.*;
 
 public class AnalysisHelper {
     Dataset<Row> wuzzufData;
@@ -27,6 +27,26 @@ public class AnalysisHelper {
             instance = new AnalysisHelper();
         }
         return instance;
+    }
+
+    public String generateButtons() {
+        String res = "";
+        res += "<div style=\"text-align:center\">";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/read\"><button> Read Data </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/summary\"><button> Data Summary </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/struct\"><button> Data Structure </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/cleandata\"><button> Clean Data </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/count-jobs-table\"><button> Most Popular Jobs Table </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-jobs-chart\"><button> Most Popular Jobs Chart </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-skills-table\"><button> Most Popular Skills Table </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-skills-chart\"><button> Most Popular Skills Chart </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-titles-table\"><button> Most Popular Jobs Titles Table </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-titles-chart\"><button> Most Popular Jobs Titles Chart </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-areas-table\"><button> Most Popular Areas Titles Table </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-areas-chart\"><button> Most Popular Areas Titles Chart </button></a>";
+        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/k-means\"><button> Kmeans </button></a>";
+        res += "</div>";
+        return res;
     }
 
     public String readData() {

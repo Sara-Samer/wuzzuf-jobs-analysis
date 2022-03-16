@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class WuzzufAnalysisController {
 
     @GetMapping("/")
-    public String index() {
-        return "Hi Dear User";
+    public ResponseEntity<String> index() {
+        String res = AnalysisHelper.getInstance().generateButtons();
+        return ResponseEntity.ok(res);
     }
 
     @GetMapping("/read")
@@ -47,7 +48,7 @@ public class WuzzufAnalysisController {
     //     // InputStream in = getClass().getResourceAsStream("/com/example/main/controllers/img.png");
     //     return IOUtils.toByteArray(in);
     // }
-    @GetMapping("/count-jops-table")
+    @GetMapping("/count-jobs-table")
     public ResponseEntity<String> JobsPerCompany() {
         String html = AnalysisHelper.getInstance().getJobsTable();
         return ResponseEntity.ok().body(html);

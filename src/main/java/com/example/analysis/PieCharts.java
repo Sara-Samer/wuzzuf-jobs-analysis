@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-;import static com.example.utils.Constants.*;
+import static com.example.utils.Constants.*;
 
 
 public class PieCharts implements ExampleChart<PieChart>{
