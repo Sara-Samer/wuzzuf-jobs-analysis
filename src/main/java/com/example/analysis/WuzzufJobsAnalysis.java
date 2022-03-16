@@ -276,7 +276,7 @@ public class WuzzufJobsAnalysis {
     public String getKMeans(Dataset<Row> df){
         createTempView(df, "WUZZUF_DATA");
         String kmeans = (new Kmeans()).calculateKMeans(df);
-        System.out.println(kmeans);
+        // System.out.println(kmeans);
         return kmeans;
     }
 

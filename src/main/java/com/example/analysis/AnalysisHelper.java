@@ -32,19 +32,20 @@ public class AnalysisHelper {
     public String generateButtons() {
         String res = "";
         res += "<div style=\"text-align:center\">";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/read\"><button> Read Data </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/cleandata\"><button> Clean Data </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/summary\"><button> Data Summary </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/struct\"><button> Data Structure </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/count-jobs-table\"><button> Most Popular Jobs Table </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-jobs-chart\"><button> Most Popular Jobs Chart </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-skills-table\"><button> Most Popular Skills Table </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-skills-chart\"><button> Most Popular Skills Chart </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-titles-table\"><button> Most Popular Jobs Titles Table </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-titles-chart\"><button> Most Popular Jobs Titles Chart </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-areas-table\"><button> Most Popular Areas Titles Table </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/most-areas-chart\"><button> Most Popular Areas Titles Chart </button></a>";
-        res += "<a style=\"display:block; margin: 10 auto;\" href=\"/k-means\"><button> Kmeans </button></a>";
+        String style = "border: none;color: dimgray;padding: 10px 20px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;background-color:LightPink;border-radius: 25px;width:300px;";
+        res += "<a style=\""+ style +"\" href=\"/read\">Read Data </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/cleandata\">Clean Data </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/summary\">Data Summary </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/struct\">Data Structure </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/count-jobs-table\">Most Popular Jobs Table </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-jobs-chart\">Most Popular Jobs Chart </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-skills-table\">Most Popular Skills Table </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-skills-chart\">Most Popular Skills Chart </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-titles-table\">Most Popular Jobs Titles Table </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-titles-chart\">Most Popular Jobs Titles Chart </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-areas-table\">Most Popular Areas Titles Table </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/most-areas-chart\">Most Popular Areas Titles Chart </a> <br/>";
+        res += "<a style=\""+ style +"\" href=\"/k-means\">Kmeans </a> <br/>";
         res += "</div>";
         return res;
     }
@@ -101,11 +102,11 @@ public class AnalysisHelper {
 
 
     public String getJobsChart() {
-        wuzzufData = WuzzufJobsAnalysis.getInstance().jobsByCompany(wuzzufData);
+        Dataset<Row> df = WuzzufJobsAnalysis.getInstance().jobsByCompany(wuzzufData);
         String path = IMG_PATH + POPULAR_JOBS_CHART + this.fileExtention;
         File file = new File(path);
         if (!file.exists()) {
-            PieCharts.popularCompanies(wuzzufData.limit(10));
+            PieCharts.popularCompanies(df.limit(10));
         }
         String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>", POPULAR_JOBS_CHART.replace("-", " ")) +
                 String.format("<img src=\"%s\">", "/" + POPULAR_JOBS_CHART + this.fileExtention);
@@ -148,7 +149,7 @@ public class AnalysisHelper {
 
     public String getJobsTable() {
         Dataset<Row> table = WuzzufJobsAnalysis.getInstance().jobsByCompany(wuzzufData);
-        List<String> label =dfToList(table);
+        List<String> label = dfToList(table);
         String html = String.format("<h1 style=\"text-align:center;font-family:verdana;background-color:LightPink;\">%s</h1>", "Count Jobs For Each Company") +
                 "<table style= \"border:1px solid black;border-collapse: collapse; margin-left:auto;margin-right:auto; width:80%;text-align:center\">" +
                 "<tr><th style= \" border: 1px solid;\">Company</th><th style= \" border: 1px solid;\">JobsCount</th></tr>";
@@ -232,17 +233,18 @@ public class AnalysisHelper {
 
 
     public List<String> dfToList(Dataset<Row> df){
-        List results = new ArrayList();
+        List<Row> results = df.collectAsList();// new ArrayList<Row>();
 
-        for(Row r:df.collectAsList()){
-            results.add(r);
-        }
+        // for(Row r:df.collectAsList()){
+        //     results.add(r);
+        // }
         List<String> label = new ArrayList<>();
         for(int i = 0; i< results.size(); i++){
             label.add((String)((Row)results.get(i)).toString());
         }
         return label;
     }
+
     public String datasetToTable(Dataset<Row> df) {
         String html = "<table style= \"border:1px solid black;border-collapse: collapse; margin-left:auto;margin-right:auto; width:80%;text-align:center\">";
         html += "<thead>";

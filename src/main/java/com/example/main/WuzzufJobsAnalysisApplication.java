@@ -12,13 +12,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WuzzufJobsAnalysisApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
-		SparkSession
+		SparkSession spark = SparkSession
 				.builder()
 				.appName("Java Spark ML project")
 				.master("local[2]")
 				.config("spark.master", "local")
 				.getOrCreate();
-    //spark.sparkContext().setLogLevel("ERROR");
+    	spark.sparkContext().setLogLevel("ERROR");
+		spark.conf().set("spark.sql.shuffle.partitions", 3);
 		SpringApplication.run(WuzzufJobsAnalysisApplication.class, args);
 	}
 
